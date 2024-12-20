@@ -2,7 +2,6 @@
 #include <eccodes.h>
 #include <fstream>
 #include <iostream>
-#include <set>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -27,8 +26,8 @@ std::vector<std::vector<std::array<double, 4>>> ReadGribFile(const std::string &
 
         codes_context *cc = codes_context_get_default();
         {
-            codes_context_set_definitions_path(cc, "E:\\TestDelete\\eccodes\\share\\eccodes\\definitions");
-            codes_context_set_samples_path(cc, "E:\\TestDelete\\eccodes\\share\\eccodes\\samples");
+            codes_context_set_definitions_path(cc, "E:\\EccodesAndGribs\\share\\eccodes\\definitions");
+            codes_context_set_samples_path(cc, "E:\\EccodesAndGribs\\share\\eccodes\\samples");
             codes_gribex_mode_on(cc);
             codes_grib_multi_support_on(cc);
         }
@@ -202,7 +201,7 @@ std::vector<std::vector<std::array<double, 4>>> ReadGribFile(const std::string &
 int main()
 {
     {
-        auto meta = ReadGribFile("E:\\TestDelete\\eccodes\\wind_lat_0_90_lon_0_360.grb2");
+        auto meta = ReadGribFile("E:\\EccodesAndGribs\\wind_lat_0_90_lon_0_360.grb2");
 
         size_t height = meta.size();
         size_t width = meta[0].size();
@@ -228,7 +227,7 @@ int main()
     }
 
     {
-        auto meta = ReadGribFile("E:\\TestDelete\\eccodes\\wind_lat_0_-90_lon_0_360.grb2");
+        auto meta = ReadGribFile("E:\\EccodesAndGribs\\wind_lat_0_-90_lon_0_360.grb2");
 
         size_t height = meta.size();
         size_t width = meta[0].size();

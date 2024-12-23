@@ -194,63 +194,255 @@ std::vector<std::vector<std::array<double, 4>>> ReadGribFile(const std::string &
 
         fclose(in);
     }
+    std::cout << "--------------------------------" << std::endl;
 
     return result;
 }
 
-int main()
+int Write()
 {
+    try
     {
-        auto meta = ReadGribFile("E:\\EccodesAndGribs\\wind_lat_0_90_lon_0_360.grb2");
+        size_t all_height = 0;
+        size_t all_width = 0;
 
-        size_t height = meta.size();
-        size_t width = meta[0].size();
+        std::string all_filename = "all.data";
+        std::ofstream all_ostrm(all_filename, std::ios::binary);
+
+        // bool write_binary = true;
+        bool write_binary = false;
 
         {
+            auto meta = ReadGribFile("E:\\EccodesAndGribs\\wind_lat_0_-90_lon_0_360.grb2");
 
-            std::string filename = "wind_lat_0_90_lon_0_360.data";
-            std::ofstream ostrm(filename, std::ios::binary);
-            for (size_t row = 0; row < height; row++)
+            size_t height = (meta).size();
+            size_t width = (meta)[0].size();
+
+            all_width = width;
+            all_height += height;
+
             {
-                for (size_t column = 0; column < width; column++)
+
+                std::string filename = "wind_lat_0_-90_lon_0_360.data";
+                std::ofstream ostrm(filename, std::ios::binary);
+
+                if (write_binary)
                 {
-                    ostrm << "(";
-                    ostrm << meta[row][column].at(0) << ",";
-                    ostrm << meta[row][column].at(1) << ",";
-                    ostrm << meta[row][column].at(2) << ",";
-                    ostrm << meta[row][column].at(3);
-                    ostrm << ") ";
+                    for (size_t row = 0; row < height; row++)
+                    {
+                        for (size_t column = 0; column < width; column++)
+                        {
+                            ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
+                                        sizeof meta[row][column].at(0));
+                            ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
+                                        sizeof meta[row][column].at(1));
+                            ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
+                                        sizeof meta[row][column].at(2));
+                            ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
+                                        sizeof meta[row][column].at(3));
+
+                            all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
+                                            sizeof meta[row][column].at(0));
+                            all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
+                                            sizeof meta[row][column].at(1));
+                            all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
+                                            sizeof meta[row][column].at(2));
+                            all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
+                                            sizeof meta[row][column].at(3));
+                        }
+                    }
                 }
-                ostrm << std::endl;
+                else
+                {
+                    for (size_t row = 0; row < height; row++)
+                    {
+                        for (size_t column = 0; column < width; column++)
+                        {
+                            ostrm << "(";
+                            ostrm << meta[row][column].at(0) << ", ";
+                            ostrm << meta[row][column].at(1) << ", ";
+                            ostrm << meta[row][column].at(2) << ", ";
+                            ostrm << meta[row][column].at(3);
+                            ostrm << ") ";
+
+                            all_ostrm << "(";
+                            all_ostrm << meta[row][column].at(0) << ", ";
+                            all_ostrm << meta[row][column].at(1) << ", ";
+                            all_ostrm << meta[row][column].at(2) << ", ";
+                            all_ostrm << meta[row][column].at(3);
+                            all_ostrm << ") ";
+                        }
+                        ostrm << std::endl;
+                        all_ostrm << std::endl;
+                    }
+                }
             }
+        }
+
+        {
+            auto meta = ReadGribFile("E:\\EccodesAndGribs\\wind_lat_0_90_lon_0_360.grb2");
+            {
+                size_t height = (meta).size();
+                size_t width = (meta)[0].size();
+
+                all_height += height - 1;
+
+                {
+                    std::string filename = "wind_lat_0_90_lon_0_360.data";
+                    std::ofstream ostrm(filename, std::ios::binary);
+
+                    if (write_binary)
+                    {
+                        for (size_t row = 1; row < height; row++)
+                        {
+                            for (size_t column = 0; column < width; column++)
+                            {
+                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
+                                            sizeof meta[row][column].at(0));
+                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
+                                            sizeof meta[row][column].at(1));
+                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
+                                            sizeof meta[row][column].at(2));
+                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
+                                            sizeof meta[row][column].at(3));
+
+                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
+                                                sizeof meta[row][column].at(0));
+                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
+                                                sizeof meta[row][column].at(1));
+                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
+                                                sizeof meta[row][column].at(2));
+                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
+                                                sizeof meta[row][column].at(3));
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (size_t row = 1; row < height; row++)
+                        {
+                            for (size_t column = 0; column < width; column++)
+                            {
+                                ostrm << "(";
+                                ostrm << meta[row][column].at(0) << ", ";
+                                ostrm << meta[row][column].at(1) << ", ";
+                                ostrm << meta[row][column].at(2) << ", ";
+                                ostrm << meta[row][column].at(3);
+                                ostrm << ") ";
+
+                                all_ostrm << "(";
+                                all_ostrm << meta[row][column].at(0) << ", ";
+                                all_ostrm << meta[row][column].at(1) << ", ";
+                                all_ostrm << meta[row][column].at(2) << ", ";
+                                all_ostrm << meta[row][column].at(3);
+                                all_ostrm << ") ";
+                            }
+                            ostrm << std::endl;
+                            all_ostrm << std::endl;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (write_binary)
+        {
+            all_ostrm.write(reinterpret_cast<char *>(&all_width), sizeof all_width);
+            all_ostrm.write(reinterpret_cast<char *>(&all_height), sizeof all_height);
+        }
+        else
+        {
+            all_ostrm << "(";
+            all_ostrm << all_width << ", ";
+            all_ostrm << all_height;
+            all_ostrm << ") ";
+        }
+
+        {
+            std::cout << "all_size: ";
+            std::cout << "(";
+            std::cout << all_width << ", ";
+            std::cout << all_height;
+            std::cout << ") ";
         }
     }
-
+    catch (std::exception &e)
     {
-        auto meta = ReadGribFile("E:\\EccodesAndGribs\\wind_lat_0_-90_lon_0_360.grb2");
-
-        size_t height = meta.size();
-        size_t width = meta[0].size();
-
-        {
-
-            std::string filename = "wind_lat_0_-90_lon_0_360.data";
-            std::ofstream ostrm(filename, std::ios::binary);
-            for (size_t row = 0; row < height; row++)
-            {
-                for (size_t column = 0; column < width; column++)
-                {
-                    ostrm << "(";
-                    ostrm << meta[row][column].at(0) << ",";
-                    ostrm << meta[row][column].at(1) << ",";
-                    ostrm << meta[row][column].at(2) << ",";
-                    ostrm << meta[row][column].at(3);
-                    ostrm << ") ";
-                }
-                ostrm << std::endl;
-            }
-        }
+        std::cout << "!!!Exception:" << e.what() << std::endl;
     }
 
     return 0;
+}
+
+void Read()
+{
+    std::ifstream istrm("E:\\EccodesAndGribs\\build\\all.bin", std::ios::binary | std::ios::in | std::ios::ate);
+    {
+        size_t width = 0;
+        size_t height = 0;
+        {
+            size_t end = istrm.tellg();
+            istrm.seekg(end - sizeof(size_t) * 2);
+
+            istrm.read(reinterpret_cast<char *>(&width), sizeof(size_t));
+            istrm.read(reinterpret_cast<char *>(&height), sizeof(size_t));
+
+            std::cout << "width: " << width << std::endl;
+            std::cout << "height: " << height << std::endl;
+        }
+
+        auto GetOffset = [&](size_t row, size_t column) { return (row * width + column) * sizeof(double) * 4; };
+
+        std::string filename = "compare.data";
+        std::ofstream ostrm(filename, std::ios::binary);
+        {
+            size_t index = 0;
+            for (size_t row = 0; row < height; row++)
+            {
+                for (size_t column = 0; column < width; column++)
+                {
+                    istrm.seekg(GetOffset(row, column));
+
+                    double lat = 0;
+                    double lon = 0;
+                    double u = 0;
+                    double v = 0;
+
+                    istrm.read(reinterpret_cast<char *>(&lat), sizeof(lat));
+                    istrm.read(reinterpret_cast<char *>(&lon), sizeof(lon));
+                    istrm.read(reinterpret_cast<char *>(&u), sizeof(u));
+                    istrm.read(reinterpret_cast<char *>(&v), sizeof(v));
+                    // std::cout << "lat: " << lat << std::endl;
+                    // std::cout << "lon: " << lon << std::endl;
+                    // std::cout << "u: " << u << std::endl;
+                    // std::cout << "v: " << v << std::endl;
+                    // std::cout << "------" << v << std::endl;
+                    ostrm << "(";
+                    ostrm << lat << ", ";
+                    ostrm << lon << ", ";
+                    ostrm << u << ", ";
+                    ostrm << v;
+                    ostrm << ") ";
+                }
+                ostrm << std::endl;
+            }
+        }
+    }
+}
+
+int main()
+{
+    Read();
+    return 0;
+}
+
+template <typename T> void ReverseTraversal(const std::vector<T> &vec)
+{
+    if (!vec.empty())
+    {
+        for (size_t index = vec.size() - 1; index >= 0; index--)
+        {
+            auto &item = vec[index];
+        }
+    }
 }

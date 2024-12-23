@@ -5,7 +5,7 @@ set(CMAKE_BUILD_TYPE Release)
 
 project(eccodesTest)
 
-add_executable(${PROJECT_NAME} ./main.cpp)
+add_executable(${PROJECT_NAME} ./main.cpp ./GlobalWind.cpp)
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC ./include

@@ -373,58 +373,82 @@ int Write()
 
     return 0;
 }
-
+#include "GlobalWind.h"
 void Read()
 {
-    std::ifstream istrm("E:\\EccodesAndGribs\\build\\all.bin", std::ios::binary | std::ios::in | std::ios::ate);
+    if (false)
     {
-        size_t width = 0;
-        size_t height = 0;
+        std::ifstream istrm("E:\\EccodesAndGribs\\build\\all.bin", std::ios::binary | std::ios::in | std::ios::ate);
         {
-            size_t end = istrm.tellg();
-            istrm.seekg(end - sizeof(size_t) * 2);
-
-            istrm.read(reinterpret_cast<char *>(&width), sizeof(size_t));
-            istrm.read(reinterpret_cast<char *>(&height), sizeof(size_t));
-
-            std::cout << "width: " << width << std::endl;
-            std::cout << "height: " << height << std::endl;
-        }
-
-        auto GetOffset = [&](size_t row, size_t column) { return (row * width + column) * sizeof(double) * 4; };
-
-        std::string filename = "compare.data";
-        std::ofstream ostrm(filename, std::ios::binary);
-        {
-            size_t index = 0;
-            for (size_t row = 0; row < height; row++)
+            size_t width = 0;
+            size_t height = 0;
             {
-                for (size_t column = 0; column < width; column++)
+                size_t end = istrm.tellg();
+                istrm.seekg(end - sizeof(size_t) * 2);
+
+                istrm.read(reinterpret_cast<char *>(&width), sizeof(size_t));
+                istrm.read(reinterpret_cast<char *>(&height), sizeof(size_t));
+
+                std::cout << "width: " << width << std::endl;
+                std::cout << "height: " << height << std::endl;
+            }
+
+            auto GetOffset = [&](size_t row, size_t column) { return (row * width + column) * sizeof(double) * 4; };
+
+            std::string filename = "compare.data";
+            std::ofstream ostrm(filename, std::ios::binary);
+            {
+                size_t index = 0;
+                for (size_t row = 0; row < height; row++)
                 {
-                    istrm.seekg(GetOffset(row, column));
+                    for (size_t column = 0; column < width; column++)
+                    {
+                        istrm.seekg(GetOffset(row, column));
 
-                    double lat = 0;
-                    double lon = 0;
-                    double u = 0;
-                    double v = 0;
+                        double lat = 0;
+                        double lon = 0;
+                        double u = 0;
+                        double v = 0;
 
-                    istrm.read(reinterpret_cast<char *>(&lat), sizeof(lat));
-                    istrm.read(reinterpret_cast<char *>(&lon), sizeof(lon));
-                    istrm.read(reinterpret_cast<char *>(&u), sizeof(u));
-                    istrm.read(reinterpret_cast<char *>(&v), sizeof(v));
-                    // std::cout << "lat: " << lat << std::endl;
-                    // std::cout << "lon: " << lon << std::endl;
-                    // std::cout << "u: " << u << std::endl;
-                    // std::cout << "v: " << v << std::endl;
-                    // std::cout << "------" << v << std::endl;
-                    ostrm << "(";
-                    ostrm << lat << ", ";
-                    ostrm << lon << ", ";
-                    ostrm << u << ", ";
-                    ostrm << v;
-                    ostrm << ") ";
+                        istrm.read(reinterpret_cast<char *>(&lat), sizeof(lat));
+                        istrm.read(reinterpret_cast<char *>(&lon), sizeof(lon));
+                        istrm.read(reinterpret_cast<char *>(&u), sizeof(u));
+                        istrm.read(reinterpret_cast<char *>(&v), sizeof(v));
+                        // std::cout << "lat: " << lat << std::endl;
+                        // std::cout << "lon: " << lon << std::endl;
+                        // std::cout << "u: " << u << std::endl;
+                        // std::cout << "v: " << v << std::endl;
+                        // std::cout << "------" << v << std::endl;
+                        ostrm << "(";
+                        ostrm << lat << ", ";
+                        ostrm << lon << ", ";
+                        ostrm << u << ", ";
+                        ostrm << v;
+                        ostrm << ") ";
+                    }
+                    ostrm << std::endl;
                 }
-                ostrm << std::endl;
+            }
+        }
+    }
+    else
+    {
+        GlobalWind gw("E:\\EccodesAndGribs\\build\\all.bin");
+        auto width = gw.Width();
+        auto height = gw.Height();
+
+        for (size_t row = 0; row < height; row++)
+        {
+            for (size_t column = 0; column < width; column++)
+            {
+                auto value = gw.Get(row, column);
+                std::cout << "(";
+                std::cout << value.lat << ", ";
+                std::cout << value.lon << ", ";
+                std::cout << value.u << ", ";
+                std::cout << value.v;
+                std::cout << ") ";
+                std::cout << std::endl;
             }
         }
     }

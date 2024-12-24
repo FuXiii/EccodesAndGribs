@@ -378,7 +378,7 @@ void Read()
 {
     if (false)
     {
-        std::ifstream istrm("E:\\EccodesAndGribs\\build\\all.bin", std::ios::binary | std::ios::in | std::ios::ate);
+        std::ifstream istrm("E:\\EccodesAndGribs\\all.bin", std::ios::binary | std::ios::in | std::ios::ate);
         {
             size_t width = 0;
             size_t height = 0;
@@ -433,9 +433,12 @@ void Read()
     }
     else
     {
-        GlobalWind gw("E:\\EccodesAndGribs\\build\\all.bin");
+        GlobalWind gw("E:\\EccodesAndGribs\\all.bin");
         auto width = gw.Width();
         auto height = gw.Height();
+
+        std::cout << "width: " << width << std::endl;
+        std::cout << "height: " << height << std::endl;
 
         for (size_t row = 0; row < height; row++)
         {

@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+bool write_binary = true;
+bool is_write_float = true;
+
 std::vector<std::vector<std::array<double, 4>>> ReadGribFile(const std::string &url)
 {
     std::vector<std::vector<std::array<double, 4>>> result;
@@ -209,9 +212,6 @@ int Write()
         std::string all_filename = "all.data";
         std::ofstream all_ostrm(all_filename, std::ios::binary);
 
-        // bool write_binary = true;
-        bool write_binary = false;
-
         {
             auto meta = ReadGribFile("E:\\EccodesAndGribs\\wind_lat_0_-90_lon_0_360.grb2");
 
@@ -232,23 +232,43 @@ int Write()
                     {
                         for (size_t column = 0; column < width; column++)
                         {
-                            ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
-                                        sizeof meta[row][column].at(0));
-                            ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
-                                        sizeof meta[row][column].at(1));
-                            ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
-                                        sizeof meta[row][column].at(2));
-                            ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
-                                        sizeof meta[row][column].at(3));
+                            if (is_write_float)
+                            {
+                                float _0 = meta[row][column].at(0);
+                                float _1 = meta[row][column].at(1);
+                                float _2 = meta[row][column].at(2);
+                                float _3 = meta[row][column].at(3);
 
-                            all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
+                                ostrm.write(reinterpret_cast<char *>(&_0), sizeof _0);
+                                ostrm.write(reinterpret_cast<char *>(&_1), sizeof _1);
+                                ostrm.write(reinterpret_cast<char *>(&_2), sizeof _2);
+                                ostrm.write(reinterpret_cast<char *>(&_3), sizeof _3);
+
+                                all_ostrm.write(reinterpret_cast<char *>(&_0), sizeof _0);
+                                all_ostrm.write(reinterpret_cast<char *>(&_1), sizeof _1);
+                                all_ostrm.write(reinterpret_cast<char *>(&_2), sizeof _2);
+                                all_ostrm.write(reinterpret_cast<char *>(&_3), sizeof _3);
+                            }
+                            else
+                            {
+                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
                                             sizeof meta[row][column].at(0));
-                            all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
+                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
                                             sizeof meta[row][column].at(1));
-                            all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
+                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
                                             sizeof meta[row][column].at(2));
-                            all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
+                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
                                             sizeof meta[row][column].at(3));
+
+                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
+                                                sizeof meta[row][column].at(0));
+                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
+                                                sizeof meta[row][column].at(1));
+                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
+                                                sizeof meta[row][column].at(2));
+                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
+                                                sizeof meta[row][column].at(3));
+                            }
                         }
                     }
                 }
@@ -297,23 +317,43 @@ int Write()
                         {
                             for (size_t column = 0; column < width; column++)
                             {
-                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
-                                            sizeof meta[row][column].at(0));
-                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
-                                            sizeof meta[row][column].at(1));
-                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
-                                            sizeof meta[row][column].at(2));
-                                ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
-                                            sizeof meta[row][column].at(3));
+                                if (is_write_float)
+                                {
+                                    float _0 = meta[row][column].at(0);
+                                    float _1 = meta[row][column].at(1);
+                                    float _2 = meta[row][column].at(2);
+                                    float _3 = meta[row][column].at(3);
 
-                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
+                                    ostrm.write(reinterpret_cast<char *>(&_0), sizeof _0);
+                                    ostrm.write(reinterpret_cast<char *>(&_1), sizeof _1);
+                                    ostrm.write(reinterpret_cast<char *>(&_2), sizeof _2);
+                                    ostrm.write(reinterpret_cast<char *>(&_3), sizeof _3);
+
+                                    all_ostrm.write(reinterpret_cast<char *>(&_0), sizeof _0);
+                                    all_ostrm.write(reinterpret_cast<char *>(&_1), sizeof _1);
+                                    all_ostrm.write(reinterpret_cast<char *>(&_2), sizeof _2);
+                                    all_ostrm.write(reinterpret_cast<char *>(&_3), sizeof _3);
+                                }
+                                else
+                                {
+                                    ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
                                                 sizeof meta[row][column].at(0));
-                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
+                                    ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
                                                 sizeof meta[row][column].at(1));
-                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
+                                    ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
                                                 sizeof meta[row][column].at(2));
-                                all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
+                                    ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
                                                 sizeof meta[row][column].at(3));
+
+                                    all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(0)),
+                                                    sizeof meta[row][column].at(0));
+                                    all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(1)),
+                                                    sizeof meta[row][column].at(1));
+                                    all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(2)),
+                                                    sizeof meta[row][column].at(2));
+                                    all_ostrm.write(reinterpret_cast<char *>(&meta[row][column].at(3)),
+                                                    sizeof meta[row][column].at(3));
+                                }
                             }
                         }
                     }
@@ -373,6 +413,7 @@ int Write()
 
     return 0;
 }
+
 #include "GlobalWind.h"
 void Read()
 {
@@ -459,7 +500,8 @@ void Read()
 
 int main()
 {
-    Read();
+    // Read();
+    Write();
     return 0;
 }
 
